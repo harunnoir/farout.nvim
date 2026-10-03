@@ -80,6 +80,7 @@ function M.setup()
     SpellCap = { sp = c.warning, undercurl = true }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
     SpellLocal = { sp = c.info, undercurl = true }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
     SpellRare = { sp = c.hint, undercurl = true }, -- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.
+    ["@spell"] = { link = "SpellBad" },
     StatusLine = { fg = c.fg_sidebar, bg = c.bg_statusline }, -- status line of current window
     StatusLineNC = { fg = c.fg_gutter, bg = c.bg_statusline }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
     TabLine = { bg = c.bg_statusline, fg = c.fg_gutter }, -- tab pages line, not active tab page label
@@ -210,6 +211,7 @@ function M.setup()
     -- These groups are for the Neovim tree-sitter highlights.
     ["@annotation"] = { link = "PreProc" },
     ["@attribute"] = { link = "PreProc" },
+    ["@attribute.builtin"] = { link = "Special" },
     ["@boolean"] = { link = "Boolean" },
     ["@character"] = { link = "Character" },
     ["@character.special"] = { link = "SpecialChar" },
@@ -234,10 +236,14 @@ function M.setup()
     ["@function.method.call"] = { link = "@function.method" },
     ["@namespace.builtin"] = { link = "@variable.builtin" },
     ["@none"] = {},
+    ["@nospell"] = { link = "@none" },
     ["@number"] = { link = "Number" },
     ["@keyword.directive"] = { link = "PreProc" },
     ["@keyword.repeat"] = { link = "Repeat" },
     ["@keyword.storage"] = { link = "StorageClass" },
+    ["@keyword.type"] = { link = "Keyword" },
+    ["@keyword.modifier"] = { link = "Keyword" },
+    ["@keyword.conditional.ternary"] = { link = "Conditional" },
     ["@string"] = { link = "String" },
     ["@markup.link.label"] = { link = "SpecialChar" },
     ["@markup.link.label.symbol"] = { link = "Identifier" },
@@ -260,14 +266,13 @@ function M.setup()
     ["@comment.info"] = { fg = c.info },
     ["@comment.warning"] = { fg = c.warning },
     ["@comment.todo"] = { fg = c.todo },
+    ["@comment.documentation"] = { link = "SpecialComment" },
     ["@markup.link.url"] = { link = "Underlined" },
     ["@type"] = { link = "Type" },
     ["@type.definition"] = { link = "Typedef" },
     ["@type.qualifier"] = { link = "@keyword" },
 
     --- Misc
-    -- TODO:
-    -- ["@comment.documentation"] = { },
     ["@operator"] = { fg = c.blue5 }, -- For any operator: `+`, but also `->` and `*` in C.
 
     --- Punctuation

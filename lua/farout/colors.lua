@@ -18,7 +18,6 @@ M.default = {
   blue0 = "#f49d69",
   blue = "#d47d49",
   cyan = "#a67458",
-  -- TODO: rename to orange/red
   blue1 = "#BF472C",
   blue2 = "#A4895C",
   blue5 = "#a67458",
