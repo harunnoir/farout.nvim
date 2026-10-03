@@ -41,9 +41,12 @@ function M.setup()
     DiffChange = { bg = c.diff.change }, -- diff mode: Changed line |diff.txt|
     DiffDelete = { bg = c.diff.delete }, -- diff mode: Deleted line |diff.txt|
     DiffText = { bg = c.diff.text }, -- diff mode: Changed text within a changed line |diff.txt|
+    Added = { fg = c.git.add }, -- diff mode: Added line
+    Changed = { fg = c.git.change }, -- diff mode: Changed line
+    Removed = { fg = c.git.delete }, -- diff mode: Deleted line
     EndOfBuffer = { fg = c.bg }, -- filler lines (~) after the end of the buffer.  By default, this is highlighted like |hl-NonText|.
-    -- TermCursor  = { }, -- cursor in a focused terminal
-    -- TermCursorNC= { }, -- cursor in an unfocused terminal
+    TermCursor = { fg = c.bg, bg = c.fg }, -- cursor in a focused terminal
+    TermCursorNC = { fg = c.bg, bg = c.fg }, -- cursor in an unfocused terminal
     ErrorMsg = { fg = c.error }, -- error messages on the command line
     VertSplit = { fg = c.border }, -- the column separating vertically split windows
     WinSeparator = { fg = c.border, bold = true }, -- the column separating vertically split windows
@@ -53,11 +56,15 @@ function M.setup()
     SignColumnSB = { bg = c.bg_sidebar, fg = c.fg_gutter }, -- column where |signs| are displayed
     Substitute = { bg = c.red, fg = c.black }, -- |:substitute| replacement text highlighting
     LineNr = { fg = c.fg_gutter }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
+    LineNrAbove = { fg = c.fg_gutter }, -- Line number for lines above the cursor line
+    LineNrBelow = { fg = c.fg_gutter }, -- Line number for lines below the cursor line
     CursorLineNr = { fg = c.dark5 }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+    CursorLineFold = { link = "FoldColumn" }, -- Like FoldColumn when 'cursorline' is set for the cursor line
+    CursorLineSign = { link = "SignColumn" }, -- Like SignColumn when 'cursorline' is set for the cursor line
     MatchParen = { fg = c.orange, bold = true }, -- The character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
     ModeMsg = { fg = c.fg_dark, bold = true }, -- 'showmode' message (e.g., "-- INSERT -- ")
     MsgArea = { fg = c.fg_dark }, -- Area for messages and cmdline
-    -- MsgSeparator= { }, -- Separator for scrolled messages, `msgsep` flag of 'display'
+    MsgSeparator = { fg = c.fg_gutter, bg = c.bg }, -- Separator for scrolled messages, `msgsep` flag of 'display'
     MoreMsg = { fg = c.blue }, -- |more-prompt|
     NonText = { fg = c.dark3 }, -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
     Normal = { fg = c.fg, bg = options.transparent and c.none or c.bg }, -- normal text
@@ -66,10 +73,22 @@ function M.setup()
     NormalFloat = { fg = c.fg_float, bg = c.bg_float }, -- Normal text in floating windows.
     FloatBorder = { fg = c.border_highlight, bg = c.bg_float },
     FloatTitle = { fg = c.border_highlight, bg = c.bg_float },
+    FloatFooter = { fg = c.border_highlight, bg = c.bg_float }, -- Footer of floating windows
+    FloatShadow = { bg = c.black, blend = 80 }, -- Shadow of floating windows
+    FloatShadowThrough = { bg = c.black, blend = 100 }, -- Shadow of floating windows (through)
     Pmenu = { bg = c.bg_popup, fg = c.fg }, -- Popup menu: normal item.
     PmenuSel = { bg = util.darken(c.fg_gutter, 0.8) }, -- Popup menu: selected item.
     PmenuSbar = { bg = util.lighten(c.bg_popup, 0.95) }, -- Popup menu: scrollbar.
     PmenuThumb = { bg = c.fg_gutter }, -- Popup menu: Thumb of the scrollbar.
+    PmenuBorder = { fg = c.border_highlight, bg = c.bg_popup }, -- Popup menu: border
+    PmenuKind = { fg = c.cyan, bg = c.bg_popup }, -- Popup menu: kind
+    PmenuKindSel = { fg = c.cyan, bg = util.darken(c.fg_gutter, 0.8) }, -- Popup menu: kind selected
+    PmenuExtra = { fg = c.comment, bg = c.bg_popup }, -- Popup menu: extra text
+    PmenuExtraSel = { fg = c.comment, bg = util.darken(c.fg_gutter, 0.8) }, -- Popup menu: extra text selected
+    PmenuMatch = { fg = c.blue1, bg = c.bg_popup }, -- Popup menu: match
+    PmenuMatchSel = { fg = c.blue1, bg = util.darken(c.fg_gutter, 0.8) }, -- Popup menu: match selected
+    PmenuShadow = { bg = c.black, blend = 80 }, -- Popup menu: shadow
+    PmenuShadowThrough = { bg = c.black, blend = 100 }, -- Popup menu: shadow through
     Question = { fg = c.blue }, -- |hit-enter| prompt and yes/no questions
     QuickFixLine = { bg = c.bg_visual, bold = true }, -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
     Search = { bg = c.bg_search, fg = c.bg_highlight }, -- Last search pattern highlighting (see 'hlsearch').  Also used for similar items that need to stand out.
@@ -83,6 +102,8 @@ function M.setup()
     ["@spell"] = { link = "SpellBad" },
     StatusLine = { fg = c.fg_sidebar, bg = c.bg_statusline }, -- status line of current window
     StatusLineNC = { fg = c.fg_gutter, bg = c.bg_statusline }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+    StatusLineTerm = { fg = c.fg_sidebar, bg = c.bg_statusline }, -- status line of terminal window
+    StatusLineTermNC = { fg = c.fg_gutter, bg = c.bg_statusline }, -- status line of non-current terminal window
     TabLine = { bg = c.bg_statusline, fg = c.fg_gutter }, -- tab pages line, not active tab page label
     TabLineFill = { bg = c.black }, -- tab pages line, where there are no labels
     TabLineSel = { fg = c.black, bg = c.blue }, -- tab pages line, active tab page label
@@ -104,37 +125,37 @@ function M.setup()
     Constant = { fg = c.orange }, -- (preferred) any constant
     String = { fg = c.green }, --   a string constant: "this is a string"
     Character = { fg = c.green }, --  a character constant: 'c', '\n'
-    -- Number        = { }, --   a number constant: 234, 0xff
-    -- Boolean       = { }, --  a boolean constant: TRUE, false
-    -- Float         = { }, --    a floating point constant: 2.3e10
+    Number = { fg = c.orange }, --   a number constant: 234, 0xff
+    Boolean = { fg = c.orange }, --  a boolean constant: TRUE, false
+    Float = { fg = c.orange }, --    a floating point constant: 2.3e10
 
     Identifier = { fg = c.magenta, style = options.styles.variables }, -- (preferred) any variable name
     Function = { fg = c.blue, style = options.styles.functions }, -- function name (also: methods for classes)
 
     Statement = { fg = c.magenta }, -- (preferred) any statement
-    -- Conditional   = { }, --  if, then, else, endif, switch, etc.
-    -- Repeat        = { }, --   for, do, while, etc.
-    -- Label         = { }, --    case, default, etc.
+    Conditional = { fg = c.magenta }, --  if, then, else, endif, switch, etc.
+    Repeat = { fg = c.magenta }, --   for, do, while, etc.
+    Label = { fg = c.blue }, --    case, default, etc.
     Operator = { fg = c.blue5 }, -- "sizeof", "+", "*", etc.
     Keyword = { fg = c.cyan, style = options.styles.keywords }, --  any other keyword
-    -- Exception     = { }, --  try, catch, throw
+    Exception = { fg = c.magenta }, --  try, catch, throw
 
     PreProc = { fg = c.cyan }, -- (preferred) generic Preprocessor
-    -- Include       = { }, --  preprocessor #include
-    -- Define        = { }, --   preprocessor #define
-    -- Macro         = { }, --    same as Define
-    -- PreCondit     = { }, --  preprocessor #if, #else, #endif, etc.
+    Include = { fg = c.cyan }, --  preprocessor #include
+    Define = { fg = c.cyan }, --   preprocessor #define
+    Macro = { fg = c.cyan }, --    same as Define
+    PreCondit = { fg = c.cyan }, --  preprocessor #if, #else, #endif, etc.
 
     Type = { fg = c.blue1 }, -- (preferred) int, long, char, etc.
-    -- StorageClass  = { }, -- static, register, volatile, etc.
-    -- Structure     = { }, --  struct, union, enum, etc.
-    -- Typedef       = { }, --  A typedef
+    StorageClass = { fg = c.cyan }, -- static, register, volatile, etc.
+    Structure = { fg = c.blue1 }, --  struct, union, enum, etc.
+    Typedef = { fg = c.blue1 }, --  A typedef
 
     Special = { fg = c.blue1 }, -- (preferred) any special symbol
-    -- SpecialChar   = { }, --  special character in a constant
-    -- Tag           = { }, --    you can use CTRL-] on this
+    SpecialChar = { fg = c.magenta }, --  special character in a constant
+    Tag = { fg = c.blue }, --    you can use CTRL-] on this
     Delimiter = { link = "Special" }, --  character that needs attention
-    -- SpecialComment= { }, -- special things inside a comment
+    SpecialComment = { fg = c.comment, style = options.styles.comments }, -- special things inside a comment
     Debug = { fg = c.orange }, --    debugging statements
 
     Underlined = { underline = true }, -- (preferred) text that stands out, HTML links
@@ -142,7 +163,7 @@ function M.setup()
     Italic = { italic = true },
 
     -- ("Ignore", below, may be invisible...)
-    -- Ignore = { }, -- (preferred) left blank, hidden  |hl-Ignore|
+    Ignore = { fg = c.dark3 }, -- (preferred) left blank, hidden  |hl-Ignore|
 
     Error = { fg = c.error }, -- (preferred) any erroneous construct
     Todo = { bg = c.yellow, fg = c.bg }, -- (preferred) anything that needs extra attention; mostly the keywords TODO FIXME and XXX
