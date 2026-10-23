@@ -1365,7 +1365,7 @@ local highlights = {
     fg = "#6B4035"
   },
   Folded = {
-    bg = "#6B4035",
+    bg = "#241816",
     fg = "#d47d49"
   },
   Foo = {
@@ -3195,10 +3195,10 @@ local highlights = {
     fg = "#0c0706"
   },
   Visual = {
-    bg = "#6b442f"
+    bg = "#241816"
   },
   VisualNOS = {
-    bg = "#6b442f"
+    bg = "#241816"
   },
   WarningMsg = {
     fg = "#f2a766"

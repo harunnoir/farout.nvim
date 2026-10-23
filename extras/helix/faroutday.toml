@@ -77,7 +77,7 @@ type = { fg = "#db5234" }
 "ui.statusline.inactive" = { bg = "#f0e9e8", fg = "#d79687" }
 "ui.statusline.normal" = { bg = "blue", fg = "black" }
 "ui.text" = { bg = "#f9f6f6", fg = "#6c6252" }
-"ui.text.focus" = { bg = "#dd9169" }
+"ui.text.focus" = { bg = "#eae1e0" }
 "ui.text.inactive" = { fg = "#d79687", modifiers = ["italic"] }
 "ui.text.info" = { bg = "#f0e9e8", fg = "#6c6252" }
 "ui.virtual.inlay-hint" = { bg = "#f3efee", fg = "#a27961" }
