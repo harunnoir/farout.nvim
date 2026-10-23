@@ -128,7 +128,7 @@ function M.setup()
     -- Quickfix
     QuickFixLine = { bg = c.bg_visual, bold = true },
     -- Folding
-    Folded = { fg = c.blue, bg = c.fg_gutter },
+    Folded = { fg = c.blue, bg = c.bg_highlight },
     -- Cursor
     CursorLineNr = { fg = c.dark5, bold = true },
     -- Terminal
