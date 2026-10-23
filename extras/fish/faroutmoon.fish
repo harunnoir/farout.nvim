@@ -1,14 +1,14 @@
     # FarOut Color Palette
-    set -l foreground c8d3f5
-    set -l selection 2d3f76
-    set -l comment 636da6
-    set -l red ff757f
-    set -l orange ff966c
-    set -l yellow ffc777
-    set -l green c3e88d
-    set -l purple fca7ea
-    set -l cyan 86e1fc
-    set -l pink c099ff
+    set -l foreground E8D5B7
+    set -l selection 664935
+    set -l comment 69443b
+    set -l red cf573c
+    set -l orange ffae74
+    set -l yellow f2b776
+    set -l green b4997f
+    set -l purple b48a8a
+    set -l cyan b68468
+    set -l pink 9a5b63
 
     # Syntax Highlighting Colors
     set -g fish_color_normal $foreground

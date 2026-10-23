@@ -1,41 +1,41 @@
 # FarOut Alacritty Colors
 # Default colors
 [colors.primary]
-background = '#222436'
-foreground = '#c8d3f5'
+background = '#0f0908'
+foreground = '#E8D5B7'
 
 #[colors.cursor]
-#cursor = '#c8d3f5'
-#text = '#222436'
+#cursor = '#E8D5B7'
+#text = '#0f0908'
 
 # Normal colors
 [colors.normal]
-black = '#1b1d2b'
-red = '#ff757f'
-green = '#c3e88d'
-yellow = '#ffc777'
-blue = '#82aaff'
-magenta = '#c099ff'
-cyan = '#86e1fc'
-white = '#828bb8'
+black = '#0c0706'
+red = '#cf573c'
+green = '#b4997f'
+yellow = '#f2b776'
+blue = '#d48d59'
+magenta = '#9a5b63'
+cyan = '#b68468'
+white = '#D4A574'
 
 # Bright colors
 [colors.bright]
-black = '#444a73'
-red = '#ff757f'
-green = '#c3e88d'
-yellow = '#ffc777'
-blue = '#82aaff'
-magenta = '#c099ff'
-cyan = '#86e1fc'
-white = '#c8d3f5'
+black = '#3d2e2a'
+red = '#cf573c'
+green = '#b4997f'
+yellow = '#f2b776'
+blue = '#d48d59'
+magenta = '#9a5b63'
+cyan = '#b68468'
+white = '#E8D5B7'
 
 # Indexed Colors
 [[colors.indexed_colors]]
 index = 16
-color = '#ff966c'
+color = '#ffae74'
 
 [[colors.indexed_colors]]
 index = 17
-color = '#c53b53'
+color = '#ef775c'
 

@@ -46,6 +46,59 @@ M.night = {}
 M.storm = {}
 M.day = M.night
 
+M.moon = function()
+  local ret = {
+    none = "NONE",
+    bg_dark = "#1a1311",
+    bg = "#0f0908",
+    bg_highlight = "#2a1e1a",
+    terminal_black = "#3d2e2a",
+    fg = "#E8D5B7",
+    fg_dark = "#D4A574",
+    fg_gutter = "#7a4a3d",
+    dark3 = "#7a3a3d",
+    comment = "#8a5a4d",
+    dark5 = "#B68468",
+    blue0 = "#e8a879",
+    blue = "#d48d59",
+    cyan = "#b68468",
+    blue1 = "#bf573c",
+    blue2 = "#B4996C",
+    blue5 = "#b68468",
+    blue6 = "#CC9D8B",
+    blue7 = "#804f39",
+    magenta = "#9a5b63",
+    magenta2 = "#ba7b83",
+    purple = "#b48a8a",
+    orange = "#ffae74",
+    yellow = "#f2b776",
+    green = "#b4997f",
+    green1 = "#d4b99f",
+    green2 = "#dec3a9",
+    teal = "#d6a488",
+    red = "#cf573c",
+    red1 = "#ef775c",
+    git = { change = "#7a3a3d", add = "#B4996C", delete = "#BF573C" },
+    gitSigns = {
+      add = "#DABF92",
+      change = "#9C5F65",
+      delete = "#F27F65",
+    },
+  }
+  ret.comment = util.blend(ret.comment, ret.bg, "bb")
+  ret.git = {
+    change = util.blend(ret.blue, ret.bg, "ee"),
+    add = util.blend(ret.green, ret.bg, "ee"),
+    delete = util.blend(ret.red, ret.bg, "dd"),
+  }
+  ret.gitSigns = {
+    change = util.blend(ret.blue, ret.bg, "66"),
+    add = util.blend(ret.green, ret.bg, "66"),
+    delete = util.blend(ret.red, ret.bg, "aa"),
+  }
+  return ret
+end
+
 ---@return ColorScheme
 function M.setup(opts)
   opts = opts or {}

@@ -1,25 +1,25 @@
     # FarOut
 
     # Syntax Highlighting Colors
-    fish_color_normal c8d3f5
-    fish_color_command 86e1fc
-    fish_color_keyword c099ff
-    fish_color_quote ffc777
-    fish_color_redirection c8d3f5
-    fish_color_end ff966c
-    fish_color_error ff757f
-    fish_color_param fca7ea
-    fish_color_comment 636da6
-    fish_color_selection --background=2d3f76
-    fish_color_search_match --background=2d3f76
-    fish_color_operator c3e88d
-    fish_color_escape c099ff
-    fish_color_autosuggestion 636da6
+    fish_color_normal E8D5B7
+    fish_color_command b68468
+    fish_color_keyword 9a5b63
+    fish_color_quote f2b776
+    fish_color_redirection E8D5B7
+    fish_color_end ffae74
+    fish_color_error cf573c
+    fish_color_param b48a8a
+    fish_color_comment 69443b
+    fish_color_selection --background=664935
+    fish_color_search_match --background=664935
+    fish_color_operator b4997f
+    fish_color_escape 9a5b63
+    fish_color_autosuggestion 69443b
 
     # Completion Pager Colors
-    fish_pager_color_progress 636da6
-    fish_pager_color_prefix 86e1fc
-    fish_pager_color_completion c8d3f5
-    fish_pager_color_description 636da6
-    fish_pager_color_selected_background --background=2d3f76
+    fish_pager_color_progress 69443b
+    fish_pager_color_prefix b68468
+    fish_pager_color_completion E8D5B7
+    fish_pager_color_description 69443b
+    fish_pager_color_selected_background --background=664935
   
