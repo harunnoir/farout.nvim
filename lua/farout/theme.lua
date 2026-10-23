@@ -113,8 +113,27 @@ function M.setup()
     WarningMsg = { fg = c.warning }, -- warning messages
     Whitespace = { fg = c.fg_gutter }, -- "nbsp", "space", "tab" and "trail" in 'listchars'
     WildMenu = { bg = c.bg_visual }, -- current match in 'wildmenu' completion
-    WinBar = { link = "StatusLine" }, -- window bar
-    WinBarNC = { link = "StatusLineNC" }, -- window bar in inactive windows
+    WinBar = { fg = c.fg_sidebar, bg = c.bg_statusline }, -- window bar
+    WinBarNC = { fg = c.fg_gutter, bg = c.bg_statusline }, -- window bar in inactive windows
+    -- Modern Neovim 0.10+ highlights
+    FloatTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    FloatFooter = { fg = c.border_highlight, bg = c.bg_float },
+    -- Diagnostic highlights (modern)
+    DiagnosticOk = { fg = c.green1 },
+    DiagnosticVirtualTextOk = { bg = util.darken(c.green1, 0.05), fg = c.green1 },
+    DiagnosticUnderlineOk = { undercurl = true, sp = c.green1 },
+    DiagnosticDeprecated = { strikethrough = true, sp = c.terminal_black },
+    -- LSP semantic tokens (new groups)
+    LspInlayHint = { bg = util.darken(c.blue7, 0.1), fg = c.dark3 },
+    -- Quickfix
+    QuickFixLine = { bg = c.bg_visual, bold = true },
+    -- Folding
+    Folded = { fg = c.blue, bg = c.fg_gutter },
+    -- Cursor
+    CursorLineNr = { fg = c.dark5, bold = true },
+    -- Terminal
+    TermCursor = { fg = c.bg, bg = c.fg },
+    TermCursorNC = { fg = c.bg, bg = c.fg },
 
     -- These groups are not listed as default vim groups,
     -- but they are defacto standard group names for syntax highlighting.
@@ -307,6 +326,10 @@ function M.setup()
     ["@string.documentation"] = { fg = c.yellow },
     ["@string.regexp"] = { fg = c.blue6 }, -- For regexes.
     ["@string.escape"] = { fg = c.magenta }, -- For escape characters within a string.
+    ["@string.special"] = { link = "SpecialChar" },
+    ["@string.special.symbol"] = { link = "SpecialChar" },
+    ["@string.special.url"] = { link = "Underlined" },
+    ["@string.special.path"] = { fg = c.cyan },
 
     --- Functions
     ["@constructor"] = { fg = c.magenta }, -- For constructor calls and definitions: `= { }` in Lua, and Java constructors.
@@ -316,24 +339,57 @@ function M.setup()
     --- Keywords
     ["@keyword"] = { fg = c.purple, style = options.styles.keywords }, -- For keywords that don't fall in previous categories.
     ["@keyword.function"] = { fg = c.magenta, style = options.styles.functions }, -- For keywords used to define a fuction.
+    ["@keyword.operator"] = { fg = c.blue5 },
+    ["@keyword.return"] = { fg = c.magenta },
+    ["@keyword.import"] = { fg = c.cyan },
+    ["@keyword.conditional"] = { fg = c.magenta },
+    ["@keyword.repeat"] = { fg = c.magenta },
+    ["@keyword.exception"] = { fg = c.magenta },
+    ["@keyword.directive"] = { fg = c.cyan },
+    ["@keyword.directive.define"] = { fg = c.cyan },
+    ["@keyword.storage"] = { fg = c.cyan },
+    ["@keyword.coroutine"] = { fg = c.purple },
 
     ["@label"] = { fg = c.blue }, -- For labels: `label:` in C and `:label:` in Lua.
 
     --- Types
     ["@type.builtin"] = { fg = util.darken(c.blue1, 0.8) },
+    ["@type.definition"] = { fg = c.blue1 },
+    ["@type.qualifier"] = { fg = c.cyan },
     ["@variable.member"] = { fg = c.green1 }, -- For fields.
     ["@property"] = { fg = c.green1 },
+    ["@field"] = { fg = c.green1 },
 
     --- Identifiers
     ["@variable"] = { fg = c.fg, style = options.styles.variables }, -- Any variable name that does not have another highlight.
     ["@variable.builtin"] = { fg = c.red }, -- Variable names that are defined by the languages, like `this` or `self`.
     ["@module.builtin"] = { fg = c.red }, -- Variable names that are defined by the languages, like `this` or `self`.
+    ["@module"] = { fg = c.cyan },
+    ["@namespace"] = { fg = c.cyan },
 
     --- Text
     -- ["@markup.raw.markdown"] = { fg = c.blue },
     ["@markup.raw.markdown_inline"] = { bg = c.terminal_black, fg = c.blue },
     ["@markup.link"] = { fg = c.teal },
-
+    ["@markup.link.label"] = { fg = c.teal },
+    ["@markup.link.url"] = { fg = c.teal, underline = true },
+    ["@markup.heading"] = { fg = c.magenta, bold = true },
+    ["@markup.heading.1"] = { fg = c.magenta, bold = true },
+    ["@markup.heading.2"] = { fg = c.blue, bold = true },
+    ["@markup.heading.3"] = { fg = c.teal, bold = true },
+    ["@markup.heading.4"] = { fg = c.green, bold = true },
+    ["@markup.heading.5"] = { fg = c.yellow, bold = true },
+    ["@markup.heading.6"] = { fg = c.purple, bold = true },
+    ["@markup.strong"] = { bold = true },
+    ["@markup.emphasis"] = { italic = true },
+    ["@markup.strikethrough"] = { strikethrough = true },
+    ["@markup.underline"] = { underline = true },
+    ["@markup.italic"] = { italic = true },
+    ["@markup.raw"] = { fg = c.teal },
+    ["@markup.math"] = { fg = c.blue1 },
+    ["@markup.environment"] = { fg = c.cyan },
+    ["@markup.environment.name"] = { fg = c.blue1 },
+    ["@markup.quote"] = { fg = c.comment },
     ["@markup.list.unchecked"] = { fg = c.blue }, -- For brackets and parens.
     ["@markup.list.checked"] = { fg = c.green1 }, -- For brackets and parens.
 
@@ -341,12 +397,32 @@ function M.setup()
     ["@diff.minus"] = { link = "DiffDelete" },
     ["@diff.delta"] = { link = "DiffChange" },
 
-    ["@module"] = { link = "Include" },
-
     -- tsx
     ["@tag.tsx"] = { fg = c.red },
     ["@constructor.tsx"] = { fg = c.blue1 },
     ["@tag.delimiter.tsx"] = { fg = util.darken(c.blue, 0.7) },
+
+    -- JSON
+    ["@property.json"] = { fg = c.blue },
+    ["@label.json"] = { fg = c.blue },
+
+    -- YAML
+    ["@field.yaml"] = { fg = c.blue },
+    ["@property.yaml"] = { fg = c.blue },
+
+    -- TOML
+    ["@property.toml"] = { fg = c.blue },
+
+    -- Lua
+    ["@field.lua"] = { fg = c.green1 },
+
+    -- Markdown
+    ["@markup.heading.1.markdown"] = { fg = c.magenta, bold = true },
+    ["@markup.heading.2.markdown"] = { fg = c.blue, bold = true },
+    ["@markup.heading.3.markdown"] = { fg = c.teal, bold = true },
+    ["@markup.heading.4.markdown"] = { fg = c.green, bold = true },
+    ["@markup.heading.5.markdown"] = { fg = c.yellow, bold = true },
+    ["@markup.heading.6.markdown"] = { fg = c.purple, bold = true },
 
     -- LSP Semantic Token Groups
     ["@lsp.type.boolean"] = { link = "@boolean" },
@@ -392,6 +468,10 @@ function M.setup()
     ["@lsp.typemod.variable.static"] = { link = "@constant" },
     -- NOTE: maybe add these with distinct highlights?
     -- ["@lsp.typemod.variable.globalScope"] (global variables)
+    ["@lsp.typemod.function.async"] = { link = "@function" },
+    ["@lsp.typemod.function.readonly"] = { link = "@function" },
+    ["@lsp.typemod.variable.readonly"] = { link = "@variable" },
+    ["@lsp.typemod.type.readonly"] = { link = "@type" },
 
     -- ts-rainbow
     rainbowcol1 = { fg = c.red },
@@ -801,9 +881,434 @@ function M.setup()
 
     NoiceCompletionItemKindDefault = { fg = c.fg_dark, bg = c.none },
 
+    -- Snacks.nvim
+    SnacksNormal = { fg = c.fg, bg = c.bg_float },
+    SnacksBorder = { fg = c.border_highlight, bg = c.bg_float },
+    SnacksTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    SnacksFooter = { fg = c.border_highlight, bg = c.bg_float },
+    SnacksPicker = { fg = c.fg, bg = c.bg_float },
+    SnacksPickerBorder = { fg = c.border_highlight, bg = c.bg_float },
+    SnacksPickerTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    SnacksPickerList = { fg = c.fg, bg = c.bg_float },
+    SnacksPickerInput = { fg = c.fg, bg = c.bg_float },
+    SnacksPickerPreview = { fg = c.fg, bg = c.bg_float },
+    SnacksPickerDir = { fg = c.blue },
+    SnacksPickerFile = { fg = c.fg },
+    SnacksPickerMatch = { fg = c.blue1, bold = true },
+    SnacksPickerPrompt = { fg = c.orange },
+    SnacksPickerCursor = { fg = c.bg, bg = c.fg },
+    SnacksPickerSelected = { bg = c.bg_visual },
+    SnacksIndent = { fg = c.fg_gutter, nocombine = true },
+    SnacksIndentScope = { fg = c.purple, nocombine = true },
+    SnacksScope = { fg = c.purple, nocombine = true },
+    SnacksDashboardNormal = { fg = c.fg, bg = c.bg },
+    SnacksDashboardDesc = { fg = c.cyan },
+    SnacksDashboardIcon = { fg = c.cyan, bold = true },
+    SnacksDashboardKey = { fg = c.orange },
+    SnacksDashboardHeader = { fg = c.blue },
+    SnacksDashboardFooter = { fg = c.blue1 },
+
+    -- render-markdown.nvim
+    RenderMarkdownH1 = { fg = c.magenta, bold = true },
+    RenderMarkdownH2 = { fg = c.blue, bold = true },
+    RenderMarkdownH3 = { fg = c.teal, bold = true },
+    RenderMarkdownH4 = { fg = c.green, bold = true },
+    RenderMarkdownH5 = { fg = c.yellow, bold = true },
+    RenderMarkdownH6 = { fg = c.purple, bold = true },
+    RenderMarkdownH1Bg = { bg = util.darken(c.magenta, 0.1) },
+    RenderMarkdownH2Bg = { bg = util.darken(c.blue, 0.1) },
+    RenderMarkdownH3Bg = { bg = util.darken(c.teal, 0.1) },
+    RenderMarkdownH4Bg = { bg = util.darken(c.green, 0.1) },
+    RenderMarkdownH5Bg = { bg = util.darken(c.yellow, 0.1) },
+    RenderMarkdownH6Bg = { bg = util.darken(c.purple, 0.1) },
+    RenderMarkdownCode = { bg = c.terminal_black, fg = c.fg },
+    RenderMarkdownCodeInline = { bg = c.terminal_black, fg = c.teal },
+    RenderMarkdownBullet = { fg = c.orange },
+    RenderMarkdownQuote = { fg = c.comment },
+    RenderMarkdownDash = { fg = c.dark5 },
+    RenderMarkdownTableHead = { fg = c.blue, bold = true },
+    RenderMarkdownTableRow = { fg = c.fg },
+    RenderMarkdownTableFill = { fg = c.fg_gutter },
+    RenderMarkdownLink = { fg = c.teal, underline = true },
+    RenderMarkdownSign = { fg = c.blue },
+
+    -- oil.nvim
+    OilDir = { fg = c.blue, bold = true },
+    OilFile = { fg = c.fg },
+    OilLink = { fg = c.cyan, underline = true },
+    OilCreate = { fg = c.green, bold = true },
+    OilDelete = { fg = c.red, bold = true },
+    OilMove = { fg = c.yellow, bold = true },
+    OilCopy = { fg = c.blue, bold = true },
+    OilChange = { fg = c.magenta, bold = true },
+    OilSocket = { fg = c.purple },
+    OilOrphanLink = { fg = c.red, underline = true },
+    OilPermission = { fg = c.comment },
+    OilSize = { fg = c.fg_dark },
+    OilMtime = { fg = c.fg_dark },
+    OilTotal = { fg = c.blue },
+
+    -- mini.files
+    MiniFilesNormal = { fg = c.fg, bg = c.bg_float },
+    MiniFilesBorder = { fg = c.border_highlight, bg = c.bg_float },
+    MiniFilesTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    MiniFilesTitleFocused = { fg = c.blue, bg = c.bg_float, bold = true },
+    MiniFilesFile = { fg = c.fg },
+    MiniFilesDirectory = { fg = c.blue },
+    MiniFilesCursorLine = { bg = c.bg_visual },
+
+    -- gitsigns.nvim (modern)
+    GitSignsAddNr = { fg = c.gitSigns.add },
+    GitSignsChangeNr = { fg = c.gitSigns.change },
+    GitSignsDeleteNr = { fg = c.gitSigns.delete },
+    GitSignsAddLn = { bg = c.diff.add },
+    GitSignsChangeLn = { bg = c.diff.change },
+    GitSignsDeleteLn = { bg = c.diff.delete },
+    GitSignsCurrentLineBlame = { fg = c.comment, italic = true },
+    GitSignsVirtLnum = { fg = c.fg_gutter },
+
+    -- LazyVim / lazy.nvim
+    LazyNormal = { fg = c.fg, bg = c.bg_float },
+    LazyBorder = { fg = c.border_highlight, bg = c.bg_float },
+    LazyTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    LazyButton = { fg = c.fg, bg = c.bg_float },
+    LazyButtonActive = { fg = c.blue, bg = c.bg_visual, bold = true },
+    LazyComment = { fg = c.comment, style = options.styles.comments },
+    LazyCommit = { fg = c.orange },
+    LazyCommitIssue = { fg = c.blue },
+    LazyCommitType = { fg = c.magenta },
+    LazyDimmed = { fg = c.fg_gutter },
+    LazyDir = { fg = c.blue },
+    LazyH1 = { fg = c.magenta, bold = true },
+    LazyH2 = { fg = c.blue, bold = true },
+    LazyNoCond = { fg = c.comment },
+    LazyProgressDone = { bold = true, fg = c.magenta2 },
+    LazyProgressTodo = { bold = true, fg = c.fg_gutter },
+    LazyProp = { fg = c.cyan },
+    LazyReasonCmd = { fg = c.red },
+    LazyReasonEvent = { fg = c.blue },
+    LazyReasonFt = { fg = c.green },
+    LazyReasonImport = { fg = c.cyan },
+    LazyReasonKeys = { fg = c.magenta },
+    LazyReasonPlugin = { fg = c.yellow },
+    LazyReasonRequire = { fg = c.teal },
+    LazyReasonRuntime = { fg = c.purple },
+    LazyReasonSource = { fg = c.orange },
+    LazyReasonStart = { fg = c.green },
+    LazySpecial = { fg = c.blue1 },
+    LazyTaskError = { fg = c.error },
+    LazyTaskRunning = { fg = c.yellow },
+    LazyTaskSuccess = { fg = c.green },
+    LazyUrl = { fg = c.teal, underline = true },
+    LazyValue = { fg = c.fg },
+
+    -- Mason
+    MasonNormal = { fg = c.fg, bg = c.bg_float },
+    MasonBorder = { fg = c.border_highlight, bg = c.bg_float },
+    MasonHeader = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    MasonHeaderSecondary = { fg = c.blue, bg = c.bg_float, bold = true },
+    MasonHighlight = { fg = c.blue },
+    MasonHighlightBlock = { fg = c.bg, bg = c.blue },
+    MasonHighlightBlockBold = { fg = c.bg, bg = c.blue, bold = true },
+    MasonHighlightSecondary = { fg = c.cyan },
+    MasonHighlightBlockSecondary = { fg = c.bg, bg = c.cyan },
+    MasonHighlightBlockBoldSecondary = { fg = c.bg, bg = c.cyan, bold = true },
+    MasonMuted = { fg = c.fg_gutter },
+    MasonMutedBlock = { fg = c.bg, bg = c.fg_gutter },
+    MasonMutedBlockBold = { fg = c.bg, bg = c.fg_gutter, bold = true },
+
+    -- Trouble.nvim (modern)
+    TroubleNormal = { fg = c.fg, bg = c.bg_sidebar },
+    TroubleText = { fg = c.fg_dark },
+    TroubleCount = { fg = c.magenta, bg = c.fg_gutter },
+    TroublePreview = { fg = c.fg, bg = c.bg_float },
+    TroubleIndent = { fg = c.fg_gutter },
+    TroublePos = { fg = c.magenta },
+    TroubleFile = { fg = c.blue, bold = true },
+    TroubleSource = { fg = c.cyan },
+    TroubleCode = { fg = c.fg_dark },
+
+    -- WhichKey (modern)
+    WhichKeyNormal = { fg = c.fg, bg = c.bg_float },
+    WhichKeyBorder = { fg = c.border_highlight, bg = c.bg_float },
+    WhichKeyTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+
+    -- Telescope (modern)
+    TelescopePromptNormal = { fg = c.fg, bg = c.bg_float },
+    TelescopePromptBorder = { fg = c.border_highlight, bg = c.bg_float },
+    TelescopePromptTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    TelescopePreviewTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    TelescopeResultsTitle = { fg = c.border_highlight, bg = c.bg_float, bold = true },
+    TelescopeSelection = { bg = c.bg_visual },
+    TelescopeSelectionCaret = { fg = c.magenta2 },
+    TelescopeMultiSelection = { fg = c.blue1 },
+    TelescopeMatching = { fg = c.blue1, bold = true },
+    TelescopePromptPrefix = { fg = c.orange },
+
+    -- TreesitterContext
     TreesitterContext = { bg = util.darken(c.fg_gutter, 0.2) },
+    TreesitterContextLineNumber = { fg = c.dark5, bg = util.darken(c.fg_gutter, 0.2) },
+    TreesitterContextBottom = { underline = true, sp = c.border },
+
+    -- Hlargs
     Hlargs = { fg = c.yellow },
-    -- TreesitterContext = { bg = util.darken(c.bg_visual, 0.4) },
+
+    -- Navic
+    NavicSeparator = { fg = c.fg, bg = c.none },
+    NavicText = { fg = c.fg, bg = c.none },
+
+    -- Aerial
+    AerialNormal = { fg = c.fg, bg = c.none },
+    AerialGuide = { fg = c.fg_gutter },
+    AerialLine = { link = "LspInlayHint" },
+
+    -- Indent Blankline
+    IndentBlanklineChar = { fg = c.fg_gutter, nocombine = true },
+    IndentBlanklineContextChar = { fg = c.purple, nocombine = true },
+    IblIndent = { fg = c.fg_gutter, nocombine = true },
+    IblScope = { fg = c.purple, nocombine = true },
+    IblWhitespace = { fg = c.fg_gutter, nocombine = true },
+
+    -- Scrollbar
+    ScrollbarHandle = { fg = c.none, bg = c.bg_highlight },
+    ScrollbarSearchHandle = { fg = c.orange, bg = c.bg_highlight },
+    ScrollbarSearch = { fg = c.orange, bg = c.none },
+    ScrollbarErrorHandle = { fg = c.error, bg = c.bg_highlight },
+    ScrollbarError = { fg = c.error, bg = c.none },
+    ScrollbarWarnHandle = { fg = c.warning, bg = c.bg_highlight },
+    ScrollbarWarn = { fg = c.warning, bg = c.none },
+    ScrollbarInfoHandle = { fg = c.info, bg = c.bg_highlight },
+    ScrollbarInfo = { fg = c.info, bg = c.none },
+    ScrollbarHintHandle = { fg = c.hint, bg = c.bg_highlight },
+    ScrollbarHint = { fg = c.hint, bg = c.none },
+    ScrollbarMiscHandle = { fg = c.purple, bg = c.bg_highlight },
+    ScrollbarMisc = { fg = c.purple, bg = c.none },
+
+    -- Yanky
+    YankyPut = { link = "IncSearch" },
+    YankyYanked = { link = "IncSearch" },
+
+    -- Notify
+    NotifyBackground = { fg = c.fg, bg = c.bg },
+    --- Border
+    NotifyERRORBorder = { fg = util.darken(c.error, 0.3), bg = options.transparent and c.none or c.bg },
+    NotifyWARNBorder = { fg = util.darken(c.warning, 0.3), bg = options.transparent and c.none or c.bg },
+    NotifyINFOBorder = { fg = util.darken(c.info, 0.3), bg = options.transparent and c.none or c.bg },
+    NotifyDEBUGBorder = { fg = util.darken(c.comment, 0.3), bg = options.transparent and c.none or c.bg },
+    NotifyTRACEBorder = { fg = util.darken(c.purple, 0.3), bg = options.transparent and c.none or c.bg },
+    --- Icons
+    NotifyERRORIcon = { fg = c.error },
+    NotifyWARNIcon = { fg = c.warning },
+    NotifyINFOIcon = { fg = c.info },
+    NotifyDEBUGIcon = { fg = c.comment },
+    NotifyTRACEIcon = { fg = c.purple },
+    --- Title
+    NotifyERRORTitle = { fg = c.error },
+    NotifyWARNTitle = { fg = c.warning },
+    NotifyINFOTitle = { fg = c.info },
+    NotifyDEBUGTitle = { fg = c.comment },
+    NotifyTRACETitle = { fg = c.purple },
+    --- Body
+    NotifyERRORBody = { fg = c.fg, bg = options.transparent and c.none or c.bg },
+    NotifyWARNBody = { fg = c.fg, bg = options.transparent and c.none or c.bg },
+    NotifyINFOBody = { fg = c.fg, bg = options.transparent and c.none or c.bg },
+    NotifyDEBUGBody = { fg = c.fg, bg = options.transparent and c.none or c.bg },
+    NotifyTRACEBody = { fg = c.fg, bg = options.transparent and c.none or c.bg },
+
+    -- Mini
+    MiniCompletionActiveParameter = { underline = true },
+    MiniCursorword = { bg = c.fg_gutter },
+    MiniCursorwordCurrent = { bg = c.fg_gutter },
+    MiniIndentscopeSymbol = { fg = c.blue1, nocombine = true },
+    MiniIndentscopePrefix = { nocombine = true }, -- Make it invisible
+    MiniJump = { bg = c.magenta2, fg = "#ffffff" },
+    MiniJump2dSpot = { fg = c.magenta2, bold = true, nocombine = true },
+    MiniStarterCurrent = { nocombine = true },
+    MiniStarterFooter = { fg = c.yellow, italic = true },
+    MiniStarterHeader = { fg = c.blue },
+    MiniStarterInactive = { fg = c.comment, style = options.styles.comments },
+    MiniStarterItem = { fg = c.fg, bg = options.transparent and c.none or c.bg },
+    MiniStarterItemBullet = { fg = c.border_highlight },
+    MiniStarterItemPrefix = { fg = c.warning },
+    MiniStarterSection = { fg = c.blue1 },
+    MiniStarterQuery = { fg = c.info },
+    MiniStatuslineDevinfo = { fg = c.fg_dark, bg = c.bg_highlight },
+    MiniStatuslineFileinfo = { fg = c.fg_dark, bg = c.bg_highlight },
+    MiniStatuslineFilename = { fg = c.fg_dark, bg = c.fg_gutter },
+    MiniStatuslineInactive = { fg = c.blue, bg = c.bg_statusline },
+    MiniStatuslineModeCommand = { fg = c.black, bg = c.yellow, bold = true },
+    MiniStatuslineModeInsert = { fg = c.black, bg = c.green, bold = true },
+    MiniStatuslineModeNormal = { fg = c.black, bg = c.blue, bold = true },
+    MiniStatuslineModeOther = { fg = c.black, bg = c.teal, bold = true },
+    MiniStatuslineModeReplace = { fg = c.black, bg = c.red, bold = true },
+    MiniStatuslineModeVisual = { fg = c.black, bg = c.magenta, bold = true },
+    MiniSurround = { bg = c.orange, fg = c.black },
+    MiniTablineCurrent = { fg = c.fg, bg = c.fg_gutter },
+    MiniTablineFill = { bg = c.black },
+    MiniTablineHidden = { fg = c.dark5, bg = c.bg_statusline },
+    MiniTablineModifiedCurrent = { fg = c.warning, bg = c.fg_gutter },
+    MiniTablineModifiedHidden = { bg = c.bg_statusline, fg = util.darken(c.warning, 0.7) },
+    MiniTablineModifiedVisible = { fg = c.warning, bg = c.bg_statusline },
+    MiniTablineTabpagesection = { bg = c.bg_statusline, fg = c.none },
+    MiniTablineVisible = { fg = c.fg, bg = c.bg_statusline },
+    MiniTestEmphasis = { bold = true },
+    MiniTestFail = { fg = c.red, bold = true },
+    MiniTestPass = { fg = c.green, bold = true },
+    MiniTrailspace = { bg = c.red },
+
+    -- LspSaga (modern)
+    LspSagaBorderTitle = { fg = c.cyan },
+    LspSagaHoverBorder = { fg = c.blue },
+    LspSagaRenameBorder = { fg = c.green },
+    LspSagaDefPreviewBorder = { fg = c.green },
+    LspSagaCodeActionBorder = { fg = c.blue },
+    LspSagaFinderSelection = { fg = c.bg_visual },
+    LspSagaCodeActionTitle = { fg = c.blue1 },
+    LspSagaCodeActionContent = { fg = c.purple },
+    LspSagaSignatureHelpBorder = { fg = c.red },
+    ReferencesCount = { fg = c.purple },
+    DefinitionCount = { fg = c.purple },
+    DefinitionIcon = { fg = c.blue },
+    ReferencesIcon = { fg = c.blue },
+    TargetWord = { fg = c.cyan },
+
+    -- NeoVim
+    healthError = { fg = c.error },
+    healthSuccess = { fg = c.green1 },
+    healthWarning = { fg = c.warning },
+
+    -- BufferLine
+    BufferLineIndicatorSelected = { fg = c.git.change },
+
+    -- Barbar
+    BufferCurrent = { bg = c.bg, fg = c.fg },
+    BufferCurrentERROR = { bg = c.bg, fg = c.error },
+    BufferCurrentHINT = { bg = c.bg, fg = c.hint },
+    BufferCurrentINFO = { bg = c.bg, fg = c.info },
+    BufferCurrentWARN = { bg = c.bg, fg = c.warning },
+    BufferCurrentIndex = { bg = c.bg, fg = c.info },
+    BufferCurrentMod = { bg = c.bg, fg = c.warning },
+    BufferCurrentSign = { bg = c.bg, fg = c.bg },
+    BufferCurrentTarget = { bg = c.bg, fg = c.red },
+    BufferAlternate = { bg = c.fg_gutter, fg = c.fg },
+    BufferAlternateERROR = { bg = c.fg_gutter, fg = c.error },
+    BufferAlternateHINT = { bg = c.fg_gutter, fg = c.hint },
+    BufferAlternateINFO = { bg = c.fg_gutter, fg = c.info },
+    BufferAlternateWARN = { bg = c.fg_gutter, fg = c.warning },
+    BufferAlternateIndex = { bg = c.fg_gutter, fg = c.info },
+    BufferAlternateMod = { bg = c.fg_gutter, fg = c.warning },
+    BufferAlternateSign = { bg = c.fg_gutter, fg = c.info },
+    BufferAlternateTarget = { bg = c.fg_gutter, fg = c.red },
+    BufferVisible = { bg = c.bg_statusline, fg = c.fg },
+    BufferVisibleERROR = { bg = c.bg_statusline, fg = c.error },
+    BufferVisibleHINT = { bg = c.bg_statusline, fg = c.hint },
+    BufferVisibleINFO = { bg = c.bg_statusline, fg = c.info },
+    BufferVisibleWARN = { bg = c.bg_statusline, fg = c.warning },
+    BufferVisibleIndex = { bg = c.bg_statusline, fg = c.info },
+    BufferVisibleMod = { bg = c.bg_statusline, fg = c.warning },
+    BufferVisibleSign = { bg = c.bg_statusline, fg = c.info },
+    BufferVisibleTarget = { bg = c.bg_statusline, fg = c.red },
+    BufferInactive = { bg = util.darken(c.bg_highlight, 0.4), fg = util.darken(c.dark5, 0.8) },
+    BufferInactiveERROR = { bg = util.darken(c.bg_highlight, 0.4), fg = util.darken(c.error, 0.8) },
+    BufferInactiveHINT = { bg = util.darken(c.bg_highlight, 0.4), fg = util.darken(c.hint, 0.8) },
+    BufferInactiveINFO = { bg = util.darken(c.bg_highlight, 0.4), fg = util.darken(c.info, 0.8) },
+    BufferInactiveWARN = { bg = util.darken(c.bg_highlight, 0.4), fg = util.darken(c.warning, 0.8) },
+    BufferInactiveIndex = { bg = util.darken(c.bg_highlight, 0.4), fg = c.dark5 },
+    BufferInactiveMod = { bg = util.darken(c.bg_highlight, 0.4), fg = util.darken(c.warning, 0.8) },
+    BufferInactiveSign = { bg = util.darken(c.bg_highlight, 0.4), fg = c.bg },
+    BufferInactiveTarget = { bg = util.darken(c.bg_highlight, 0.4), fg = c.red },
+    BufferOffset = { bg = c.bg_statusline, fg = c.dark5 },
+    BufferTabpageFill = { bg = util.darken(c.bg_highlight, 0.8), fg = c.dark5 },
+    BufferTabpages = { bg = c.bg_statusline, fg = c.none },
+
+    -- Sneak
+    Sneak = { fg = c.bg_highlight, bg = c.magenta },
+    SneakScope = { bg = c.bg_visual },
+
+    -- Hop
+    HopNextKey = { fg = c.magenta2, bold = true },
+    HopNextKey1 = { fg = c.blue2, bold = true },
+    HopNextKey2 = { fg = util.darken(c.blue2, 0.6) },
+    HopUnmatched = { fg = c.dark3 },
+
+    TSNodeKey = { fg = c.magenta2, bold = true },
+    TSNodeUnmatched = { fg = c.dark3 },
+
+    LeapMatch = { bg = c.magenta2, fg = c.fg, bold = true },
+    LeapLabelPrimary = { fg = c.magenta2, bold = true },
+    LeapLabelSecondary = { fg = c.green1, bold = true },
+    LeapBackdrop = { fg = c.dark3 },
+
+    FlashBackdrop = { fg = c.dark3 },
+    FlashLabel = { bg = c.magenta2, bold = true, fg = c.fg },
+    FlashMatch = { bg = c.magenta2, fg = c.fg },
+    FlashCurrent = { bg = c.magenta2, fg = c.fg },
+
+    LightspeedGreyWash = { fg = c.dark3 },
+    LightspeedLabel = { fg = c.magenta2, bold = true, underline = true },
+    LightspeedLabelDistant = { fg = c.green1, bold = true, underline = true },
+    LightspeedLabelDistantOverlapped = { fg = c.green2, underline = true },
+    LightspeedLabelOverlapped = { fg = c.magenta2, underline = true },
+    LightspeedMaskedChar = { fg = c.orange },
+    LightspeedOneCharMatch = { bg = c.magenta2, fg = c.fg, bold = true },
+    LightspeedPendingOpArea = { bg = c.magenta2, fg = c.fg },
+    LightspeedShortcut = { bg = c.magenta2, fg = c.fg, bold = true, underline = true },
+    LightspeedUnlabeledMatch = { fg = c.blue2, bold = true },
+
+    -- Cmp
+    CmpDocumentation = { fg = c.fg, bg = c.bg_float },
+    CmpDocumentationBorder = { fg = c.border_highlight, bg = c.bg_float },
+    CmpGhostText = { fg = c.terminal_black },
+    CmpItemAbbr = { fg = c.fg, bg = c.none },
+    CmpItemAbbrDeprecated = { fg = c.fg_gutter, bg = c.none, strikethrough = true },
+    CmpItemAbbrMatch = { fg = c.blue1, bg = c.none },
+    CmpItemAbbrMatchFuzzy = { fg = c.blue1, bg = c.none },
+    CmpItemMenu = { fg = c.comment, bg = c.none },
+    CmpItemKindDefault = { fg = c.fg_dark, bg = c.none },
+    CmpItemKindCodeium = { fg = c.teal, bg = c.none },
+    CmpItemKindCopilot = { fg = c.teal, bg = c.none },
+    CmpItemKindTabNine = { fg = c.teal, bg = c.none },
+    CmpItemKindSupermaven = { fg = c.teal, bg = c.none },
+
+    -- headlines.nvim
+    CodeBlock = { bg = c.bg_dark },
+    Headline1 = { bg = util.darken(c.magenta, 0.1) },
+    Headline2 = { bg = util.darken(c.blue, 0.1) },
+    Headline3 = { bg = util.darken(c.teal, 0.1) },
+    Headline4 = { bg = util.darken(c.green, 0.1) },
+    Headline5 = { bg = util.darken(c.yellow, 0.1) },
+    Headline6 = { bg = util.darken(c.purple, 0.1) },
+
+    -- Dap
+    DapStoppedLine = { bg = util.darken(c.warning, 0.1) },
+    DapBreakpoint = { fg = c.red },
+    DapBreakpointCondition = { fg = c.yellow },
+    DapBreakpointRejected = { fg = c.error },
+    DapLogPoint = { fg = c.blue },
+    DapUIBreakpointsPath = { fg = c.blue },
+    DapUIBreakpointsInfo = { fg = c.green },
+    DapUIBreakpointsCurrentLine = { fg = c.yellow, bold = true },
+    DapUIBreakpointsDisabledLine = { fg = c.comment },
+    DapUIBreakpointsLine = { fg = c.comment },
+    DapUIWatchesEmpty = { fg = c.error },
+    DapUIWatchesValue = { fg = c.green },
+    DapUIWatchesError = { fg = c.error },
+    DapUIFloatBorder = { fg = c.border_highlight },
+    DapUIFloatNormal = { fg = c.fg, bg = c.bg_float },
+    DapUIFrameName = { fg = c.fg },
+    DapUIScope = { fg = c.blue },
+    DapUIType = { fg = c.cyan },
+    DapUIValue = { fg = c.fg },
+    DapUIModifiedValue = { fg = c.magenta, bold = true },
+    DapUIDecoration = { fg = c.purple },
+    DapUIThread = { fg = c.green },
+    DapUIStoppedThread = { fg = c.yellow },
+    DapUISource = { fg = c.teal },
+    DapUILineNumber = { fg = c.blue },
+    DapUIFloatError = { fg = c.error },
+    DapUIFloatWarn = { fg = c.warning },
+    DapUIFloatInfo = { fg = c.info },
+    DapUIFloatHint = { fg = c.hint },
   }
 
   -- lsp symbol kind and completion kind highlights

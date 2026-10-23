@@ -21,7 +21,8 @@ function M.get(group)
   end
 end
 
--- taken from https://github.com/nvim-treesitter/nvim-treesitter/blob/master/lua/nvim-treesitter/highlight.lua
+-- Fallbacks for old TreeSitter group names (pre-0.9)
+-- These map old TS* groups to new @* groups
 M.fallbacks = {
   ["annotation"] = "TSAnnotation",
   ["attribute"] = "TSAttribute",
@@ -97,284 +98,142 @@ M.fallbacks = {
   ["variable.builtin"] = "TSVariableBuiltin",
 }
 
+-- Default highlight links for TreeSitter groups (new style @* groups)
+-- These are used when the theme doesn't explicitly define them
 M.defaults = {
-  ["@annotation"] = {
-    default = true,
-    link = "PreProc",
-  },
-  ["@attribute"] = {
-    default = true,
-    link = "PreProc",
-  },
-  ["@boolean"] = {
-    default = true,
-    link = "Boolean",
-  },
-  ["@character"] = {
-    default = true,
-    link = "Character",
-  },
-  ["@character.special"] = {
-    default = true,
-    link = "SpecialChar",
-  },
-  ["@comment"] = {
-    default = true,
-    link = "Comment",
-  },
-  ["@conditional"] = {
-    default = true,
-    link = "Conditional",
-  },
-  ["@constant"] = {
-    default = true,
-    link = "Constant",
-  },
-  ["@constant.builtin"] = {
-    default = true,
-    link = "Special",
-  },
-  ["@constant.macro"] = {
-    default = true,
-    link = "Define",
-  },
-  ["@constructor"] = {
-    default = true,
-    link = "Special",
-  },
-  ["@debug"] = {
-    default = true,
-    link = "Debug",
-  },
-  ["@define"] = {
-    default = true,
-    link = "Define",
-  },
-  ["@exception"] = {
-    default = true,
-    link = "Exception",
-  },
-  ["@field"] = {
-    default = true,
-    link = "Identifier",
-  },
-  ["@float"] = {
-    default = true,
-    link = "Float",
-  },
-  ["@function"] = {
-    default = true,
-    link = "Function",
-  },
-  ["@function.builtin"] = {
-    default = true,
-    link = "Special",
-  },
-  ["@function.call"] = {
-    default = true,
-    link = "@function",
-  },
-  ["@function.macro"] = {
-    default = true,
-    link = "Macro",
-  },
-  ["@include"] = {
-    default = true,
-    link = "Include",
-  },
-  ["@keyword"] = {
-    default = true,
-    link = "Keyword",
-  },
-  ["@keyword.coroutine"] = {
-    default = true,
-    link = "@keyword",
-  },
-  ["@keyword.function"] = {
-    default = true,
-    link = "Keyword",
-  },
-  ["@keyword.operator"] = {
-    default = true,
-    link = "@operator",
-  },
-  ["@keyword.return"] = {
-    default = true,
-    link = "@keyword",
-  },
-  ["@label"] = {
-    default = true,
-    link = "Label",
-  },
-  ["@method"] = {
-    default = true,
-    link = "Function",
-  },
-  ["@method.call"] = {
-    default = true,
-    link = "@method",
-  },
-  ["@namespace"] = {
-    default = true,
-    link = "Include",
-  },
-  ["@none"] = {
-    default = true,
-  },
-  ["@number"] = {
-    default = true,
-    link = "Number",
-  },
-  ["@operator"] = {
-    default = true,
-    link = "Operator",
-  },
-  ["@parameter"] = {
-    default = true,
-    link = "Identifier",
-  },
-  ["@preproc"] = {
-    default = true,
-    link = "PreProc",
-  },
-  ["@property"] = {
-    default = true,
-    link = "Identifier",
-  },
-  ["@punctuation.bracket"] = {
-    default = true,
-    link = "Delimiter",
-  },
-  ["@punctuation.delimiter"] = {
-    default = true,
-    link = "Delimiter",
-  },
-  ["@punctuation.special"] = {
-    default = true,
-    link = "Delimiter",
-  },
-  ["@repeat"] = {
-    default = true,
-    link = "Repeat",
-  },
-  ["@storageclass"] = {
-    default = true,
-    link = "StorageClass",
-  },
-  ["@string"] = {
-    default = true,
-    link = "String",
-  },
-  ["@string.escape"] = {
-    default = true,
-    link = "SpecialChar",
-  },
-  ["@string.regex"] = {
-    default = true,
-    link = "String",
-  },
-  ["@string.special"] = {
-    default = true,
-    link = "SpecialChar",
-  },
-  ["@symbol"] = {
-    default = true,
-    link = "Identifier",
-  },
-  ["@tag"] = {
-    default = true,
-    link = "Label",
-  },
-  ["@tag.attribute"] = {
-    default = true,
-    link = "@property",
-  },
-  ["@tag.delimiter"] = {
-    default = true,
-    link = "Delimiter",
-  },
-  ["@text"] = {
-    default = true,
-    link = "@none",
-  },
-  ["@text.danger"] = {
-    default = true,
-    link = "WarningMsg",
-  },
-  ["@text.emphasis"] = {
-    default = true,
-    italic = true,
-  },
-  ["@text.environment"] = {
-    default = true,
-    link = "Macro",
-  },
-  ["@text.environment.name"] = {
-    default = true,
-    link = "Type",
-  },
-  ["@text.literal"] = {
-    default = true,
-    link = "String",
-  },
-  ["@text.math"] = {
-    default = true,
-    link = "Special",
-  },
-  ["@text.note"] = {
-    default = true,
-    link = "SpecialComment",
-  },
-  ["@text.reference"] = {
-    default = true,
-    link = "Constant",
-  },
-  ["@text.strike"] = {
-    strikethrough = true,
-  },
-  ["@text.strong"] = {
-    bold = true,
-    default = true,
-  },
-  ["@text.title"] = {
-    default = true,
-    link = "Title",
-  },
-  ["@text.underline"] = {
-    underline = true,
-  },
-  ["@text.uri"] = {
-    default = true,
-    link = "Underlined",
-  },
-  ["@text.warning"] = {
-    default = true,
-    link = "Todo",
-  },
-  ["@text.todo"] = {
-    default = true,
-    link = "Todo",
-  },
-  ["@type"] = {
-    default = true,
-    link = "Type",
-  },
-  ["@type.builtin"] = {
-    default = true,
-    link = "Type",
-  },
-  ["@type.definition"] = {
-    default = true,
-    link = "Typedef",
-  },
-  ["@type.qualifier"] = {
-    default = true,
-    link = "@keyword",
-  },
-  ["@variable.builtin"] = {
-    default = true,
-    link = "Special",
-  },
+  ["@annotation"] = { default = true, link = "PreProc" },
+  ["@attribute"] = { default = true, link = "PreProc" },
+  ["@attribute.builtin"] = { default = true, link = "Special" },
+  ["@boolean"] = { default = true, link = "Boolean" },
+  ["@character"] = { default = true, link = "Character" },
+  ["@character.special"] = { default = true, link = "SpecialChar" },
+  ["@comment"] = { default = true, link = "Comment" },
+  ["@comment.documentation"] = { default = true, link = "SpecialComment" },
+  ["@comment.error"] = { default = true, link = "DiagnosticError" },
+  ["@comment.hint"] = { default = true, link = "DiagnosticHint" },
+  ["@comment.info"] = { default = true, link = "DiagnosticInfo" },
+  ["@comment.note"] = { default = true, link = "DiagnosticHint" },
+  ["@comment.todo"] = { default = true, link = "Todo" },
+  ["@comment.warning"] = { default = true, link = "DiagnosticWarn" },
+  ["@conditional"] = { default = true, link = "Conditional" },
+  ["@constant"] = { default = true, link = "Constant" },
+  ["@constant.builtin"] = { default = true, link = "Special" },
+  ["@constant.macro"] = { default = true, link = "Define" },
+  ["@constructor"] = { default = true, link = "Special" },
+  ["@debug"] = { default = true, link = "Debug" },
+  ["@define"] = { default = true, link = "Define" },
+  ["@diff.delta"] = { default = true, link = "DiffChange" },
+  ["@diff.minus"] = { default = true, link = "DiffDelete" },
+  ["@diff.plus"] = { default = true, link = "DiffAdd" },
+  ["@error"] = { default = true, link = "Error" },
+  ["@exception"] = { default = true, link = "Exception" },
+  ["@field"] = { default = true, link = "Identifier" },
+  ["@float"] = { default = true, link = "Float" },
+  ["@function"] = { default = true, link = "Function" },
+  ["@function.builtin"] = { default = true, link = "Special" },
+  ["@function.call"] = { default = true, link = "@function" },
+  ["@function.macro"] = { default = true, link = "Macro" },
+  ["@function.method"] = { default = true, link = "Function" },
+  ["@function.method.call"] = { default = true, link = "@function.method" },
+  ["@include"] = { default = true, link = "Include" },
+  ["@keyword"] = { default = true, link = "Keyword" },
+  ["@keyword.conditional"] = { default = true, link = "Conditional" },
+  ["@keyword.conditional.ternary"] = { default = true, link = "Conditional" },
+  ["@keyword.coroutine"] = { default = true, link = "@keyword" },
+  ["@keyword.debug"] = { default = true, link = "Debug" },
+  ["@keyword.directive"] = { default = true, link = "PreProc" },
+  ["@keyword.directive.define"] = { default = true, link = "Define" },
+  ["@keyword.exception"] = { default = true, link = "Exception" },
+  ["@keyword.function"] = { default = true, link = "Keyword" },
+  ["@keyword.import"] = { default = true, link = "Include" },
+  ["@keyword.modifier"] = { default = true, link = "Keyword" },
+  ["@keyword.operator"] = { default = true, link = "@operator" },
+  ["@keyword.repeat"] = { default = true, link = "Repeat" },
+  ["@keyword.return"] = { default = true, link = "@keyword" },
+  ["@keyword.storage"] = { default = true, link = "StorageClass" },
+  ["@keyword.type"] = { default = true, link = "Keyword" },
+  ["@label"] = { default = true, link = "Label" },
+  ["@markup"] = { default = true, link = "@none" },
+  ["@markup.environment"] = { default = true, link = "Macro" },
+  ["@markup.environment.name"] = { default = true, link = "Type" },
+  ["@markup.heading"] = { default = true, link = "Title" },
+  ["@markup.heading.1"] = { default = true, link = "@markup.heading" },
+  ["@markup.heading.2"] = { default = true, link = "@markup.heading" },
+  ["@markup.heading.3"] = { default = true, link = "@markup.heading" },
+  ["@markup.heading.4"] = { default = true, link = "@markup.heading" },
+  ["@markup.heading.5"] = { default = true, link = "@markup.heading" },
+  ["@markup.heading.6"] = { default = true, link = "@markup.heading" },
+  ["@markup.italic"] = { default = true, italic = true },
+  ["@markup.link"] = { default = true, link = "SpecialChar" },
+  ["@markup.link.label"] = { default = true, link = "SpecialChar" },
+  ["@markup.link.label.symbol"] = { default = true, link = "Identifier" },
+  ["@markup.link.url"] = { default = true, link = "Underlined" },
+  ["@markup.list"] = { default = true, link = "Special" },
+  ["@markup.list.checked"] = { default = true, link = "Character" },
+  ["@markup.list.unchecked"] = { default = true, link = "Character" },
+  ["@markup.math"] = { default = true, link = "Special" },
+  ["@markup.raw"] = { default = true, link = "String" },
+  ["@markup.raw.markdown_inline"] = { default = true, link = "String" },
+  ["@markup.strong"] = { default = true, bold = true },
+  ["@markup.strikethrough"] = { default = true, strikethrough = true },
+  ["@markup.underline"] = { default = true, underline = true },
+  ["@method"] = { default = true, link = "Function" },
+  ["@method.call"] = { default = true, link = "@method" },
+  ["@module"] = { default = true, link = "Include" },
+  ["@module.builtin"] = { default = true, link = "Special" },
+  ["@namespace"] = { default = true, link = "Include" },
+  ["@namespace.builtin"] = { default = true, link = "@variable.builtin" },
+  ["@none"] = { default = true },
+  ["@nospell"] = { default = true, link = "@none" },
+  ["@number"] = { default = true, link = "Number" },
+  ["@number.float"] = { default = true, link = "Float" },
+  ["@operator"] = { default = true, link = "Operator" },
+  ["@parameter"] = { default = true, link = "Identifier" },
+  ["@parameter.reference"] = { default = true, link = "@parameter" },
+  ["@preproc"] = { default = true, link = "PreProc" },
+  ["@property"] = { default = true, link = "Identifier" },
+  ["@punctuation.bracket"] = { default = true, link = "Delimiter" },
+  ["@punctuation.delimiter"] = { default = true, link = "Delimiter" },
+  ["@punctuation.special"] = { default = true, link = "Delimiter" },
+  ["@repeat"] = { default = true, link = "Repeat" },
+  ["@storageclass"] = { default = true, link = "StorageClass" },
+  ["@string"] = { default = true, link = "String" },
+  ["@string.documentation"] = { default = true, link = "@string" },
+  ["@string.escape"] = { default = true, link = "SpecialChar" },
+  ["@string.regexp"] = { default = true, link = "String" },
+  ["@string.special"] = { default = true, link = "SpecialChar" },
+  ["@string.special.path"] = { default = true, link = "String" },
+  ["@string.special.symbol"] = { default = true, link = "SpecialChar" },
+  ["@string.special.url"] = { default = true, link = "Underlined" },
+  ["@symbol"] = { default = true, link = "Identifier" },
+  ["@tag"] = { default = true, link = "Label" },
+  ["@tag.attribute"] = { default = true, link = "@property" },
+  ["@tag.delimiter"] = { default = true, link = "Delimiter" },
+  ["@text"] = { default = true, link = "@none" },
+  ["@text.danger"] = { default = true, link = "WarningMsg" },
+  ["@text.emphasis"] = { default = true, italic = true },
+  ["@text.environment"] = { default = true, link = "Macro" },
+  ["@text.environment.name"] = { default = true, link = "Type" },
+  ["@text.literal"] = { default = true, link = "String" },
+  ["@text.math"] = { default = true, link = "Special" },
+  ["@text.note"] = { default = true, link = "SpecialComment" },
+  ["@text.reference"] = { default = true, link = "Constant" },
+  ["@text.strike"] = { default = true, strikethrough = true },
+  ["@text.strong"] = { default = true, bold = true },
+  ["@text.title"] = { default = true, link = "Title" },
+  ["@text.underline"] = { default = true, underline = true },
+  ["@text.uri"] = { default = true, link = "Underlined" },
+  ["@text.warning"] = { default = true, link = "Todo" },
+  ["@text.todo"] = { default = true, link = "Todo" },
+  ["@type"] = { default = true, link = "Type" },
+  ["@type.builtin"] = { default = true, link = "Type" },
+  ["@type.definition"] = { default = true, link = "Typedef" },
+  ["@type.qualifier"] = { default = true, link = "@keyword" },
+  ["@variable"] = { default = true, link = "Identifier" },
+  ["@variable.builtin"] = { default = true, link = "Special" },
+  ["@variable.member"] = { default = true, link = "Identifier" },
+  ["@variable.parameter"] = { default = true, link = "Identifier" },
+  ["@variable.parameter.builtin"] = { default = true, link = "@variable.parameter" },
 }
 
 return M

@@ -22,7 +22,7 @@ error = { fg = "#a14834" }
 function = { fg = "#c77544" }
 "function.builtin" = { fg = "#db5234" }
 "function.macro" = { fg = "#91654c" }
-"function.method" = { fg = "#c77544" }
+"function.method" = 
 "function.special" = { fg = "#91654c" }
 hint = { fg = "#a27961" }
 info = { fg = "#725f3e" }
@@ -31,13 +31,13 @@ keyword = { fg = "#876060", modifiers = ["italic"] }
 "keyword.control.conditional" = { fg = "#c37f87" }
 "keyword.control.exception" = { fg = "#c37f87" }
 "keyword.control.repeat" = { fg = "#c37f87" }
-"keyword.control.return" = { fg = "#876060", modifiers = ["italic"] }
+"keyword.control.return" = { fg = "#c37f87" }
 "keyword.directive" = { fg = "#91654c" }
 "keyword.function" = { fg = "#c37f87" }
 "keyword.operator" = { fg = "#c37f87" }
 label = { fg = "#c77544" }
 "markup.bold" = { modifiers = ["bold"] }
-"markup.heading" = { fg = "#c77544", modifiers = ["bold"] }
+"markup.heading" = 
 "markup.heading.completion" = { bg = "#f0e9e8", fg = "#6c6252" }
 "markup.heading.hover" = { bg = "#dcaa9f" }
 "markup.italic" = { modifiers = ["italic"] }
@@ -52,13 +52,13 @@ label = { fg = "#c77544" }
 "markup.raw.block" = { fg = "#a27961" }
 "markup.raw.inline" = { bg = "#d1c4c2", fg = "#c77544" }
 "markup.strikethrough" = { modifiers = ["crossed_out"] }
-namespace = { fg = "#c37f87" }
+namespace = { fg = "#91654c" }
 operator = { fg = "#91654c" }
 special = { fg = "#db5234" }
 string = { fg = "#715e4b" }
 "string.regexp" = { fg = "#a47d6a" }
-"string.special" = { fg = "#db5234" }
-tag = { fg = "#c37f87" }
+"string.special" = { fg = "#c37f87" }
+tag = { fg = "#c77544" }
 type = { fg = "#db5234" }
 "type.builtin" = { fg = "#f06c53" }
 "type.enum" = { fg = "#db5234" }
@@ -67,7 +67,7 @@ type = { fg = "#db5234" }
 "ui.cursor" = { bg = "#6c6252", fg = "#f9f6f6" }
 "ui.cursor.match" = { fg = "#b15c00", modifiers = ["bold"] }
 "ui.linenr" = { fg = "#d79687" }
-"ui.linenr.select" = { fg = "#91654c" }
+"ui.linenr.select" = { fg = "#91654c", modifiers = ["bold"] }
 "ui.menu" = { bg = "#f0e9e8", fg = "#6c6252" }
 "ui.menu.scroll" = { bg = 14866646, fg = 14128775 }
 "ui.menu.selected" = { bg = "#dcaa9f" }
